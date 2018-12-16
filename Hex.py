@@ -49,8 +49,8 @@ with(open(argsH['filename'], mode='rb')) as fh:
         hex_s = ""
         printables_s = ""
         for i in range(buffer_size):
-            c = chr(buffer[i])
-            a = ord(c)
+            a = buffer[i]
+            c = chr(a)
             hex_s += "{0:02X} ".format(a)
             if a in _PRINTABLE_SET_:
                 printables_s += c
