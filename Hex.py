@@ -38,10 +38,10 @@ parser.add_argument("-f", "--file", metavar="FILE", help="File to read",
         required=True, dest="filename")
 argsH = vars(parser.parse_args())
 
-with(open(argsH["filename"], mode="rb")) as fh:
+with(open(argsH["filename"], mode="rb")) as file_handle:
     offset = 0
     while True:
-        buffer = fh.read(_READ_BUFFER_SIZE_)
+        buffer = file_handle.read(_READ_BUFFER_SIZE_)
         buffer_size = len(buffer)
         if buffer_size == 0:
             break
@@ -49,11 +49,11 @@ with(open(argsH["filename"], mode="rb")) as fh:
         hex_s = ""
         printables_s = ""
         for i in range(buffer_size):
-            a = buffer[i]
-            c = chr(a)
-            hex_s += "{0:02X} ".format(a)
-            if a in _PRINTABLE_SET_:
-                printables_s += c
+            ascii_as_int = buffer[i]
+            character = chr(ascii_as_int)
+            hex_s += "{0:02X} ".format(ascii_as_int)
+            if ascii_as_int in _PRINTABLE_SET_:
+                printables_s += character
             else:
                 printables_s += "."
 
