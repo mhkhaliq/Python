@@ -46,22 +46,24 @@ with(open(argsH["filename"], mode="rb")) as file_handle:
         if buffer_size == 0:
             break
         
-        hex_s = ""
-        printables_s = ""
+        hex_l = []
+        printables_l = []
+		
         for i in range(buffer_size):
             ascii_as_int = buffer[i]
             character = chr(ascii_as_int)
-            hex_s += "{0:02X} ".format(ascii_as_int)
+            hex_l.append("{0:02X} ".format(ascii_as_int))
             if ascii_as_int in _PRINTABLE_SET_:
-                printables_s += character
+                printables_l.append(character)
             else:
-                printables_s += "."
+                printables_l.append(".")
 
         padding_size = _READ_BUFFER_SIZE_ - buffer_size
         for i in range(padding_size):
-            hex_s += "   "
+            hex_l.append("   ")
 
-        print("{:08X}  {} {}".format(offset, hex_s, printables_s), flush=True)
+        print("{:08X}  {} {}".format(offset, "".join(hex_l), 
+		        "".join(printables_l)), flush=True)
         offset += _READ_BUFFER_SIZE_
 	
 
