@@ -22,9 +22,11 @@ import argparse
 ################################################################################
 
 _READ_BUFFER_SIZE_ = 16
+
 _MIN_PRINT_ASCII_ = 0x20
 _MAX_PRINT_ASCII_ = 0x7e
-_PRINTABLE_SET_ = {e for e in range(_MIN_PRINT_ASCII_, _MAX_PRINT_ASCII_ + 1)}
+_NUM_ASCII_CHARS_ = 256
+_UNPRINTABLE_CASE_ = "."
 
 
 
@@ -40,6 +42,16 @@ argsH = vars(parser.parse_args())
 
 with(open(argsH["filename"], mode="rb")) as file_handle:
     offset = 0
+	
+    hex_a = []
+    print_a = []
+    for i in range(_NUM_ASCII_CHARS_):
+        hex_a.append("{0:02X} ".format(i))
+        if i >= _MIN_PRINT_ASCII_ and i <= _MAX_PRINT_ASCII_:
+            print_a.append(chr(i))
+        else:
+            print_a.append(_UNPRINTABLE_CASE_)
+	
     while True:
         buffer = file_handle.read(_READ_BUFFER_SIZE_)
         buffer_size = len(buffer)
@@ -49,18 +61,14 @@ with(open(argsH["filename"], mode="rb")) as file_handle:
         hex_l = []
         printables_l = []
 		
-        for i in range(buffer_size):
-            ascii_as_int = buffer[i]
-            character = chr(ascii_as_int)
-            hex_l.append("{0:02X} ".format(ascii_as_int))
-            if ascii_as_int in _PRINTABLE_SET_:
-                printables_l.append(character)
-            else:
-                printables_l.append(".")
-
-        padding_size = _READ_BUFFER_SIZE_ - buffer_size
-        for i in range(padding_size):
-            hex_l.append("   ")
+        for b in buffer:
+            hex_l.append(hex_a[b])
+            printables_l.append(print_a[b])
+        
+        if buffer_size < _READ_BUFFER_SIZE_:
+            padding_size = _READ_BUFFER_SIZE_ - buffer_size
+            for i in range(padding_size):
+                hex_l.append("   ")
 
         print("{:08X}  {} {}".format(offset, "".join(hex_l), 
 		        "".join(printables_l)), flush=True)
