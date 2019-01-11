@@ -22,6 +22,7 @@ import argparse
 ################################################################################
 
 _READ_BUFFER_SIZE_ = 16
+_PADDING_ = "   "
 
 _MIN_PRINT_ASCII_ = 0x20
 _MAX_PRINT_ASCII_ = 0x7e
@@ -68,7 +69,7 @@ with(open(argsH["filename"], mode="rb")) as file_handle:
         if buffer_size < _READ_BUFFER_SIZE_:
             padding_size = _READ_BUFFER_SIZE_ - buffer_size
             for i in range(padding_size):
-                hex_l.append("   ")
+                hex_l.append(_PADDING_)
 
         print("{:08X}  {} {}".format(offset, "".join(hex_l), 
 		        "".join(printables_l)), flush=True)
